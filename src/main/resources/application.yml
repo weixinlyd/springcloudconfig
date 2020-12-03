@@ -1,0 +1,46 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: microservice-config-server
+  cloud:
+    config:
+      server:
+        git:
+          #gitee地址
+          #http://localhost:8080/microservice-foo/dev/test-2.0  {application}=microservice-foo这个是git上的或系统上的配置文件名称
+          #{profile}=dev 这个是选择的环境 {label}=test-2.0这个是git上选择的分支
+          uri: https://gitee.com/liu-yanda/spring-cloud-config.git    #默认的仓库
+          #gitee用户名
+          username: 18842608993
+          #git密码
+          password: awm842388245
+          #匹配模式是指带有通配符的{application}/{profile}名称的列表.如果{application}/{profile}
+          #不匹配任何模式,它将使用spring.cloud.config.server.git.uri定义的url
+          repos:                  #匹配的仓库
+            simple:
+              uri: https://gitee.com/liu-yanda/simple.git
+              pattern: sim* #对application name的模式匹配
+              username: 18842608993
+              password: awm842388245
+              search-paths: '{application}' #注意：这里要加引号不然会因为yml格式不合法而导致配置不生效
+              clone-on-start: true #启动时自动clone git仓库
+              default-label: master #设置默认分支
+#这个为什么不好使？？？？？
+        health:
+          repositories:
+            spring-cloud-config:   #仓库名
+              label: test-2.0       #分支
+              name: microservice-foo    #文件名
+              profiles: dev         #环境选择
+
+
+
+
+        #http://localhost:8080/simple-foo-dev/simple-dev-2.0/master   测试
+
+#将打包设置为debug级别,就可以打印出config server 请求git仓库细节
+logging:
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.boot: DEBUG
